@@ -11,15 +11,9 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-
-
 /* REST API Endpoints */
 app.post("/signup", signupPost);
 app.post("/username", getUsername);
 app.post("/login", loginPost);
-
-
-
-
 
 app.listen(PORT, ()=>console.log(`Server Running on PORT ${PORT}`));
