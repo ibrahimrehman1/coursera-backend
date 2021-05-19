@@ -15,11 +15,10 @@ module.exports.signupPost = async (req, res) => {
         mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
         try{
             let user = await User.create({fullname, email, password});
-            console.log(user)
             let token = createToken(user._id);
-            res.cookie("jwt", token, {maxAge: 60*60*24*3*1000, httpOnly: true})
-            res.status(201).json({userID: user._id});
+            res.status(201).json({userID: user._id, token, username: fullname});
         }catch(err){
+            console.log(err);
             res.status(401).json({error: err.message});
         }
     }catch(e){
@@ -27,18 +26,23 @@ module.exports.signupPost = async (req, res) => {
     }
 }
 
-module.exports.getUsername = async (req, res) =>{
-    try{
-        mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
+module.exports.username = async (req, res) =>{
+    let token = req.body.token;
+    jwt.verify(token, "Coursera Key", async (err, decoded)=>{
         try{
-            let user = await User.findById({_id: req.body.userID});
-            res.status(200).json({fullname: user.fullname});
+            mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
+            try{
+                let user = await User.findById({_id: decoded.id});
+                res.status(200).json({username: user.fullname})
+            }catch(err){
+                console.log(err);
+                res.status(401).json({error: err.message});
+            }
         }catch(err){
-            res.status(404).json({error: err.message});
+            res.status(500).json({"status": "Unable to connect to the database!"});
         }
-    }catch(e){
-        res.status(500).json({"status": "Unable to connect to the database!"});
-    }
+    })
+
 }
 
 module.exports.loginPost = async (req, res) =>{
@@ -49,7 +53,8 @@ module.exports.loginPost = async (req, res) =>{
             let user = await User.findOne({email});
             let check = await bcrypt.compare(password, user.password);
             if (check){
-                res.status(200).json({userID: user._id});
+                let token = createToken(user._id);
+                res.status(201).json({userID: user._id, token});
             }else{
                 res.status(404);
             }
