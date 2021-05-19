@@ -48,13 +48,14 @@ module.exports.username = async (req, res) =>{
 module.exports.loginPost = async (req, res) =>{
     try{
         const {email, password} = req.body;
+        console.log(req.body);
         mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
         try{
             let user = await User.findOne({email});
             let check = await bcrypt.compare(password, user.password);
             if (check){
                 let token = createToken(user._id);
-                res.status(201).json({userID: user._id, token});
+                res.status(201).json({userID: user._id, token, username: user.fullname});
             }else{
                 res.status(404);
             }
