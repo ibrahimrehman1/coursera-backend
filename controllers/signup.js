@@ -11,6 +11,7 @@ function createToken(id){
 
 module.exports.signupPost = async (req, res) => {
     const {fullname, email, password} = req.body;
+    console.log(req.body)
     try{
         mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
         try{
@@ -28,10 +29,12 @@ module.exports.signupPost = async (req, res) => {
 
 module.exports.username = async (req, res) =>{
     let token = req.body.token;
+    console.log(token)
     jwt.verify(token, "Coursera Key", async (err, decoded)=>{
         try{
             mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
             try{
+                console.log(decoded)
                 let user = await User.findById({_id: decoded.id});
                 res.status(200).json({username: user.fullname})
             }catch(err){
