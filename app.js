@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const {signupPost, loginPost, username} = require("./controllers/signup");
+const { signupPost, loginPost, username } = require("./controllers/signup");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,4 +14,4 @@ app.post("/signup", signupPost);
 app.post("/login", loginPost);
 app.post("/username", username);
 
-app.listen(PORT, ()=>console.log(`Server Running on PORT ${PORT}`));
+app.listen(PORT, () => console.log(`Server Running on PORT ${PORT}`));
