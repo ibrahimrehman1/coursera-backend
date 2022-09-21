@@ -1,7 +1,10 @@
 const express = require("express");
 const cors = require("cors");
-const { signupPost, loginPost, username } = require("./controllers/signup");
+const { signup } = require("./controllers/signup");
+const { login } = require("./controllers/login");
+const { username } = require("./controllers/username");
 const {PORT} = require("./utils/config");
+const {Logger} = require('./utils/logger')
 
 const app = express();
 
@@ -10,8 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 /* REST API Endpoints */
-app.post("/signup", signupPost);
-app.post("/login", loginPost);
+app.post("/signup", signup);
+app.post("/login", login);
 app.post("/username", username);
 
-app.listen(PORT, () => console.log(`Server Running on PORT ${PORT}`));
+app.listen(PORT, () => Logger.logInfo(`Server Running on PORT ${PORT}`));
