@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const { signupPost, loginPost, username } = require("./controllers/signup");
+const {PORT} = require("./utils/config");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 /* Middlewares */
 app.use(cors());
